@@ -2,20 +2,28 @@ package xyz.cheungz.httphelper.core;
 
 
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.CharArrayBuffer;
 import org.apache.http.util.EntityUtils;
 import xyz.cheungz.httphelper.constant.HttpConstant;
-import xyz.cheungz.httphelper.exception.RequestMethodNotFoundException;
+import xyz.cheungz.httphelper.exception.TypeMismatchException;
 import xyz.cheungz.httphelper.utils.ClientFactory;
+import xyz.cheungz.httphelper.utils.SerializationUtil;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Program: HttpClientHelper
@@ -63,9 +71,21 @@ public abstract class AbstractHttpClient {
         try {
             if (HttpConstant.POST.equals(method)) {
                 HttpPost post = new HttpPost(url);
-                StringEntity requestEntity = new StringEntity(json, StandardCharsets.UTF_8);
-                requestEntity.setContentType(mode);
-                post.setEntity(requestEntity);
+
+                if (HttpConstant.FORM.equals(mode)){
+                    Map<String,String> map = SerializationUtil.string2Obj(json, HashMap.class);
+                    List<NameValuePair> pairs = new ArrayList<>();
+                    for (String key : map.keySet()){
+                        pairs.add(new BasicNameValuePair(key,map.get(key)));
+                    }
+                        post.setEntity(new UrlEncodedFormEntity(pairs,StandardCharsets.UTF_8));
+                }else if (HttpConstant.BODY.equals(mode)){
+                    StringEntity requestEntity = new StringEntity(json, StandardCharsets.UTF_8);
+                    requestEntity.setContentType(mode);
+                    post.setEntity(requestEntity);
+                }else {
+                    throw new TypeMismatchException("content-type not found!");
+                }
                 response = closeableHttpClient.execute(post);
                 if (response != null && response.getStatusLine().getStatusCode() == HttpConstant.RESULT_CODE) {
                     HttpEntity entity = response.getEntity();
@@ -78,7 +98,7 @@ public abstract class AbstractHttpClient {
                 result = entityToString(response.getEntity());
                 return result;
             } else {
-                throw new RequestMethodNotFoundException("request method not found!");
+                throw new TypeMismatchException("request method not found!");
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package xyz.cheungz.httphelper;
 
 import org.junit.Test;
+import xyz.cheungz.httphelper.constant.HttpConstant;
 import xyz.cheungz.httphelper.core.Client;
 
 import java.util.HashMap;
@@ -22,7 +23,8 @@ public class AppTest
                 "\t\"username\": \"zhangzhe\"\n" +
                 "}";
         Client client = new Client();
-        client.setUrl("http://localhost/map").setJson(json);
+        //client.setUrl("http://localhost/map").setJson(json);
+        client.setUrl("http://localhost/json").setJson(json).setMode(HttpConstant.FORM);
         String s = client.sendPost();
         System.out.println(s);
     }

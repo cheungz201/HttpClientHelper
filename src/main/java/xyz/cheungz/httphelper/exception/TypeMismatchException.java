@@ -7,8 +7,9 @@ package xyz.cheungz.httphelper.exception;
  * @Version: 1.0.0
  * @Description:
  **/
-public class RequestMethodNotFoundException extends RuntimeException{
-    public RequestMethodNotFoundException(String details){
+public class TypeMismatchException extends RuntimeException{
+    public TypeMismatchException(String details){
+
         super(details);
     }
 }
