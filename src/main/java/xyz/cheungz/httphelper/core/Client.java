@@ -27,8 +27,7 @@ public class Client extends AbstractHttpClient {
         this.mode = mode;
     }
 
-    public Client() {
-    }
+    public Client() { }
 
     /**
      * post的默认调用

@@ -1,6 +1,11 @@
 package xyz.cheungz.httphelper.core;
 
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -10,20 +15,19 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.CharArrayBuffer;
-import org.apache.http.util.EntityUtils;
 import xyz.cheungz.httphelper.constant.HttpConstant;
 import xyz.cheungz.httphelper.exception.TypeMismatchException;
+import xyz.cheungz.httphelper.utils.BaseUtils;
 import xyz.cheungz.httphelper.utils.ClientFactory;
 import xyz.cheungz.httphelper.utils.SerializationUtil;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * @Program: HttpClientHelper
@@ -36,9 +40,14 @@ public abstract class AbstractHttpClient {
 
 
     /**
-     * 唯一的HttpClient
+     * 唯一的CloseableHttpClient
      */
     private final static CloseableHttpClient closeableHttpClient = ClientFactory.getPoolHttpClient();
+
+    /**
+     * 唯一的HttpClient
+     */
+    private final static HttpClient multiHttpClient = ClientFactory.getMultiHttpClient();
 
     /**
      * 发送post请求
@@ -65,13 +74,12 @@ public abstract class AbstractHttpClient {
      * @param mode 编码格式,x-www-form-urlencoded或body
      * @return 响应数据
      */
-    public String send(String url, String json,String method, String mode){
+    protected String send(String url, String json,String method, String mode){
         String result = null;
         CloseableHttpResponse response = null;
         try {
             if (HttpConstant.POST.equals(method)) {
                 HttpPost post = new HttpPost(url);
-
                 if (HttpConstant.FORM.equals(mode)){
                     Map<String,String> map = SerializationUtil.string2Obj(json, HashMap.class);
                     List<NameValuePair> pairs = new ArrayList<>();
@@ -89,14 +97,12 @@ public abstract class AbstractHttpClient {
                 response = closeableHttpClient.execute(post);
                 if (response != null && response.getStatusLine().getStatusCode() == HttpConstant.RESULT_CODE) {
                     HttpEntity entity = response.getEntity();
-                    result = entityToString(entity);
-                    return result;
+                    result = BaseUtils.entityToString(entity);
                 }
             } else if (HttpConstant.GET.equals(method)) {
                 HttpGet get = new HttpGet(url);
                 response = closeableHttpClient.execute(get);
-                result = entityToString(response.getEntity());
-                return result;
+                result = BaseUtils.entityToString(response.getEntity());
             } else {
                 throw new TypeMismatchException("request method not found!");
             }
@@ -112,35 +118,81 @@ public abstract class AbstractHttpClient {
             }
         }
 
-        return null;
+        return result;
     }
 
     /**
-     * 处理HttpEntity实体
-     * @param entity
+     *
+     * @param url 请求地址
+     * @param json 请求数据
+     * @param method 请求方法
+     * @param mode content-type
      * @return
-     * @throws IOException
-     * @return 处理结果
      */
-    private  String entityToString(HttpEntity entity) throws IOException {
-        String result = null;
-        if (entity != null) {
-            long length = entity.getContentLength();
-            if (length != -1 && length < 2048) {
-                result = EntityUtils.toString(entity, "UTF-8");
-            } else {
-                InputStreamReader reader1 = new InputStreamReader(entity.getContent(), "UTF-8");
-                CharArrayBuffer buffer = new CharArrayBuffer(2048);
-                char[] tmp = new char[1024];
-                int l;
-                while ((l = reader1.read(tmp)) != -1) {
-                    buffer.append(tmp, 0, l);
-                }
-                result = buffer.toString();
-            }
+    protected String multiSend(String url, String json,String method, String mode){
+        String result =  null;
+        if (HttpConstant.POST.equals(method)){
+            result = postSend(url, json, mode);
+        }else if (HttpConstant.GET.equals(method)){
+            result = getSend(url);
+        }else {
+            throw new TypeMismatchException("request method not found!");
         }
         return result;
     }
 
+
+    /**
+     * 发送multiPost
+     * @param url  请求地址
+     * @param json 请求数据
+     * @param mode content-type
+     * @return 响应数据
+     * @throws IOException
+     */
+    private String postSend(String url, String json, String mode) {
+        PostMethod request = new PostMethod(url);
+        String result = null;
+        try{
+            HttpMethodParams params = request.getParams();
+            params.setParameter(HttpMethodParams.SO_TIMEOUT,60 * 1000);
+            params.setHttpElementCharset("UTF-8");
+            params.setContentCharset("UTF-8");
+            params.setUriCharset("UTF-8");
+            request.addRequestHeader(HttpConstant.CONTENT_TYPE,mode);
+            request.setRequestBody(json);
+            multiHttpClient.executeMethod(request);
+            result = BaseUtils.inStreamToString(request.getResponseBodyAsStream());
+        } catch (HttpException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            request.releaseConnection();
+        }
+        return result;
+    }
+
+    /**
+     * 发送multiGet
+     * @param url
+     * @return 响应数据
+     * @throws IOException
+     */
+    private String getSend(String url) {
+        String result = null;
+        GetMethod request = new GetMethod(url);
+        try {
+            multiHttpClient.executeMethod(request);
+            result = BaseUtils.inStreamToString(request.getResponseBodyAsStream());
+        } catch (HttpException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            request.releaseConnection();
+        }
+        return result;
+    }
 
 }
