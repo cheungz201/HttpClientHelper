@@ -36,7 +36,7 @@ import java.util.Map;
  * @Version: 1.0.0
  * @Description:
  **/
-public abstract class AbstractHttpClient {
+public abstract class AbstractHttpClient implements HttpAble {
 
 
     /**
@@ -56,6 +56,7 @@ public abstract class AbstractHttpClient {
      * @param mode 编码格式,x-www-form-urlencoded或body
      * @return 响应数据
      */
+    @Override
     public abstract String sendPost(String url, String json, String mode);
 
     /**
@@ -63,6 +64,7 @@ public abstract class AbstractHttpClient {
      * @param url 请求路径
      * @return
      */
+    @Override
     public abstract String sendGet(String url);
 
 
@@ -159,8 +161,17 @@ public abstract class AbstractHttpClient {
             params.setHttpElementCharset("UTF-8");
             params.setContentCharset("UTF-8");
             params.setUriCharset("UTF-8");
-            request.addRequestHeader(HttpConstant.CONTENT_TYPE,mode);
-            request.setRequestBody(json);
+            request.setRequestHeader(HttpConstant.CONTENT_TYPE,mode);
+            if (HttpConstant.FORM.equals(mode)){
+                Map<String,String> map = SerializationUtil.string2Obj(json, HashMap.class);
+                for (String key: map.keySet()){
+                    request.setParameter(key,map.get(key));
+                }
+            }else if (HttpConstant.BODY.equals(mode)){
+                request.setRequestBody(json);
+            }else {
+                throw new TypeMismatchException("content-type not found");
+            }
             multiHttpClient.executeMethod(request);
             result = BaseUtils.inStreamToString(request.getResponseBodyAsStream());
         } catch (HttpException e) {

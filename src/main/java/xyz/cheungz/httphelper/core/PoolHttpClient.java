@@ -9,25 +9,25 @@ import xyz.cheungz.httphelper.constant.HttpConstant;
  * @Version: 1.0.0
  * @Description: 请求发送器
  **/
-public class Client extends AbstractHttpClient {
+public class PoolHttpClient extends AbstractHttpClient {
 
     private String url;
     private String json;
     private String mode;
 
-    public Client(String url, String json) {
+    public PoolHttpClient(String url, String json) {
         this.url = url;
         this.json = json;
         this.mode = HttpConstant.BODY;
     }
 
-    public Client(String url, String json, String mode) {
+    public PoolHttpClient(String url, String json, String mode) {
         this.url = url;
         this.json = json;
         this.mode = mode;
     }
 
-    public Client() { }
+    public PoolHttpClient() { }
 
     /**
      * post的默认调用
@@ -84,7 +84,7 @@ public class Client extends AbstractHttpClient {
         return url;
     }
 
-    public Client setUrl(String url) {
+    public PoolHttpClient setUrl(String url) {
         this.url = url;
         return this;
     }
@@ -93,7 +93,7 @@ public class Client extends AbstractHttpClient {
         return json;
     }
 
-    public Client setJson(String json) {
+    public PoolHttpClient setJson(String json) {
         this.json = json;
         return this;
     }
@@ -102,7 +102,7 @@ public class Client extends AbstractHttpClient {
         return mode;
     }
 
-    public Client setMode(String mode) {
+    public PoolHttpClient setMode(String mode) {
         this.mode = mode;
         return this;
     }

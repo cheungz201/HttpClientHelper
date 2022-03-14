@@ -2,7 +2,7 @@ package xyz.cheungz.httphelper;
 
 import org.junit.Test;
 import xyz.cheungz.httphelper.constant.HttpConstant;
-import xyz.cheungz.httphelper.core.Client;
+import xyz.cheungz.httphelper.core.PoolHttpClient;
 import xyz.cheungz.httphelper.core.multithreading.MultiHttpClient;
 
 import java.util.HashMap;
@@ -28,17 +28,45 @@ public class AppTest {
     /**
      * Rigorous Test :-)
      */
-    //@Test
-    public void sendTest() {
-        Client client = new Client();
-        client.setUrl("http://localhost:8080/json").setJson(json).setMode(HttpConstant.BODY);
-        String s = client.sendPost();
-        System.out.println(s);
+    @Test
+    public void poolSendPostJson() {
+        PoolHttpClient poolHttpClient = new PoolHttpClient();
+        poolHttpClient.setUrl("http://localhost:8080/json").setJson(json).setMode(HttpConstant.BODY);
+        System.out.println(poolHttpClient.sendPost()+"1");
     }
 
     @Test
-    public void multiSend(){
-        MultiHttpClient client = new MultiHttpClient();
-        System.out.println(client.sendPost(url_json, json, HttpConstant.BODY));
+    public void poolSendGet(){
+        PoolHttpClient poolHttpClient = new PoolHttpClient();
+        poolHttpClient.setUrl("http://localhost:8080/get?username=zhangsan");
+        System.out.println(poolHttpClient.sendGet()+"2");
     }
+
+    @Test
+    public void poolSenPostForm(){
+        PoolHttpClient poolHttpClient =  new PoolHttpClient();
+        poolHttpClient.setUrl(url_form).setJson(json).setMode(HttpConstant.FORM);
+        System.out.println(poolHttpClient.sendPost()+"3");
+    }
+
+    //@Test
+    public void multiSendPostJson(){
+        MultiHttpClient client = new MultiHttpClient();
+        System.out.println(client.sendPost(url_json, json, HttpConstant.BODY)+"4");
+    }
+
+    @Test
+    public void multiSendPostForm(){
+        MultiHttpClient client = new MultiHttpClient();
+        System.out.println(client.sendPost(url_form, json,HttpConstant.FORM)+"5");
+    }
+
+    @Test
+    public void multiSendGet(){
+        MultiHttpClient client = new MultiHttpClient();
+        System.out.println(client.sendGet("http://localhost:8080/get?username=zhangsan")+"6");
+    }
+
+
+
 }
