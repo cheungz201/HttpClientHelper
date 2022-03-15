@@ -3,11 +3,12 @@ package xyz.cheungz.httphelper.core;
 import xyz.cheungz.httphelper.constant.HttpConstant;
 
 /**
+ * 请求发送器
+ *
  * @Program: HttpClientHelper
  * @Author: Zhang Zhe
  * @Create: 2022-03-13 14:36
  * @Version: 1.0.0
- * @Description: 请求发送器
  **/
 public class PoolHttpClient extends AbstractHttpClient {
 

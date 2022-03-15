@@ -4,11 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
+ * 序列化工具，完成对象和string之间的转换
+ * 
  * @Program: HttpClientHelper
  * @Author: Zhang Zhe
  * @Create: 2022-03-13 12:41
  * @Version: 1.0.0
- * @Description: 序列化工具，完成对象和string之间的转换
  **/
 public class SerializationUtil {
 

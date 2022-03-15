@@ -2,7 +2,6 @@ package xyz.cheungz.httphelper.core;
 
 
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
@@ -30,11 +29,12 @@ import java.util.Map;
 
 
 /**
+ * 顶层的HttpClient
+ *
  * @Program: HttpClientHelper
  * @Author: Zhang Zhe
  * @Create: 2022-03-13 13:06
  * @Version: 1.0.0
- * @Description:
  **/
 public abstract class AbstractHttpClient implements HttpAble {
 
@@ -124,7 +124,7 @@ public abstract class AbstractHttpClient implements HttpAble {
     }
 
     /**
-     *
+     * multi发送器
      * @param url 请求地址
      * @param json 请求数据
      * @param method 请求方法
@@ -134,9 +134,9 @@ public abstract class AbstractHttpClient implements HttpAble {
     protected String multiSend(String url, String json,String method, String mode){
         String result =  null;
         if (HttpConstant.POST.equals(method)){
-            result = postSend(url, json, mode);
+            result = multiPostSend(url, json, mode);
         }else if (HttpConstant.GET.equals(method)){
-            result = getSend(url);
+            result = multiGetSend(url);
         }else {
             throw new TypeMismatchException("request method not found!");
         }
@@ -150,9 +150,8 @@ public abstract class AbstractHttpClient implements HttpAble {
      * @param json 请求数据
      * @param mode content-type
      * @return 响应数据
-     * @throws IOException
      */
-    private String postSend(String url, String json, String mode) {
+    private String multiPostSend(String url, String json, String mode) {
         PostMethod request = new PostMethod(url);
         String result = null;
         try{
@@ -174,11 +173,9 @@ public abstract class AbstractHttpClient implements HttpAble {
             }
             multiHttpClient.executeMethod(request);
             result = BaseUtils.inStreamToString(request.getResponseBodyAsStream());
-        } catch (HttpException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             request.releaseConnection();
         }
         return result;
@@ -188,19 +185,16 @@ public abstract class AbstractHttpClient implements HttpAble {
      * 发送multiGet
      * @param url
      * @return 响应数据
-     * @throws IOException
      */
-    private String getSend(String url) {
+    private String multiGetSend(String url) {
         String result = null;
         GetMethod request = new GetMethod(url);
         try {
             multiHttpClient.executeMethod(request);
             result = BaseUtils.inStreamToString(request.getResponseBodyAsStream());
-        } catch (HttpException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             request.releaseConnection();
         }
         return result;

@@ -8,14 +8,14 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import xyz.cheungz.httphelper.core.multithreading.MultiHttpClient;
 
 /**
+ * 获取单例的HttpClient
+ *
  * @Program: HttpClientHelper
  * @Author: Zhang Zhe
  * @Create: 2022-03-13 12:50
  * @Version: 1.0.0
- * @Description: 获取单例的HttpClient
  **/
 public class ClientFactory {
 

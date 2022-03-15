@@ -9,11 +9,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
+ * 基础工具类
+ *
  * @Program: HttpClientHelper
  * @Author: Zhang Zhe
  * @Create: 2022-03-13 20:33
  * @Version: 1.0.0
- * @Description:
  **/
 public class BaseUtils {
 

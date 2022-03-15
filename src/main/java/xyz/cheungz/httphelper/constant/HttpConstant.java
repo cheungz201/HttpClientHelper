@@ -1,11 +1,12 @@
 package xyz.cheungz.httphelper.constant;
 
 /**
+ * http相关字段常量
+ *
  * @Program: HttpClientHelper
  * @Author: Zhang Zhe
  * @Create: 2022-03-13 12:51
  * @Version: 1.0.0
- * @Description: http相关字段常量
  **/
 public class HttpConstant {
 
