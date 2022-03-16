@@ -9,8 +9,8 @@ package xyz.cheungz.httphelper.exception;
  * @Version: 1.0.0
  **/
 public class TypeMismatchException extends RuntimeException{
-    public TypeMismatchException(String details){
 
+    public TypeMismatchException(String details){
         super(details);
     }
 }

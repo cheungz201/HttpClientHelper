@@ -14,10 +14,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.logging.log4j.Logger;
 import xyz.cheungz.httphelper.constant.HttpConstant;
 import xyz.cheungz.httphelper.exception.TypeMismatchException;
 import xyz.cheungz.httphelper.utils.BaseUtils;
 import xyz.cheungz.httphelper.utils.ClientFactory;
+import xyz.cheungz.httphelper.utils.LogUtil;
 import xyz.cheungz.httphelper.utils.SerializationUtil;
 
 import java.io.IOException;
@@ -38,6 +40,7 @@ import java.util.Map;
  **/
 public abstract class AbstractHttpClient implements HttpAble {
 
+    Logger logger = LogUtil.getLogger(this.getClass());
 
     /**
      * 唯一的CloseableHttpClient
@@ -109,7 +112,7 @@ public abstract class AbstractHttpClient implements HttpAble {
                 throw new TypeMismatchException("request method not found!");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (response != null){
                 try {
@@ -174,7 +177,7 @@ public abstract class AbstractHttpClient implements HttpAble {
             multiHttpClient.executeMethod(request);
             result = BaseUtils.inStreamToString(request.getResponseBodyAsStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             request.releaseConnection();
         }
@@ -193,7 +196,7 @@ public abstract class AbstractHttpClient implements HttpAble {
             multiHttpClient.executeMethod(request);
             result = BaseUtils.inStreamToString(request.getResponseBodyAsStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             request.releaseConnection();
         }
