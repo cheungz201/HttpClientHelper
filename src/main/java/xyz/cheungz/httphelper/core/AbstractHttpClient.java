@@ -129,7 +129,7 @@ public abstract class AbstractHttpClient implements HttpAble {
      * @param json 请求数据
      * @param method 请求方法
      * @param mode content-type
-     * @return
+     * @return 响应数据
      */
     protected String multiSend(String url, String json,String method, String mode){
         String result =  null;

@@ -1,8 +1,10 @@
 package xyz.cheungz.httphelper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Test;
 import xyz.cheungz.httphelper.constant.HttpConstant;
 import xyz.cheungz.httphelper.core.PoolHttpClient;
+import xyz.cheungz.httphelper.core.ResolveDataHttpClient;
 import xyz.cheungz.httphelper.core.multithreading.MultiHttpClient;
 
 import java.util.HashMap;
@@ -65,6 +67,20 @@ public class AppTest {
     public void multiSendGet(){
         MultiHttpClient client = new MultiHttpClient();
         System.out.println(client.sendGet("http://localhost:8080/get?username=zhangsan")+"6");
+    }
+
+    @Test
+    public void resolveClientTest(){
+        ResolveDataHttpClient client = new ResolveDataHttpClient(new MultiHttpClient());
+
+        try {
+            String s = client.sendPost(url_json,HttpConstant.BODY,map);
+            System.out.println(s);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
