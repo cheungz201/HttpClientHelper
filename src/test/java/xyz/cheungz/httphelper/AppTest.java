@@ -73,12 +73,14 @@ public class AppTest {
     public void resolveClientTest(){
         ResolveDataHttpClient client = new ResolveDataHttpClient(new MultiHttpClient());
 
-        try {
+        /*try {
             String s = client.sendPost(url_json,HttpConstant.BODY,map);
             System.out.println(s);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-        }
+        }*/
+
+        System.out.println(client.sendGet("http://www.cheungz.xyz/article/26"));
 
 
     }
