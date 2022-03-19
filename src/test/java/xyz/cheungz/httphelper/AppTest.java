@@ -27,13 +27,17 @@ public class AppTest {
     }
 
 
-    /**
-     * Rigorous Test :-)
-     */
     @Test
     public void poolSendPostJson() {
         PoolHttpClient poolHttpClient = new PoolHttpClient();
-        poolHttpClient.setUrl("http://localhost:8080/json").setJson(json).setMode(HttpConstant.BODY);
+        poolHttpClient.setUrl("http://localhost:8080/json").setJson(json).setHeader(HttpConstant.DEFAULT_REQUEST_HEADER);
+        System.out.println(poolHttpClient.sendPost()+"1");
+    }
+
+    @Test
+    public void poolSendPostJsonNoHeader() {
+        PoolHttpClient poolHttpClient = new PoolHttpClient();
+        poolHttpClient.setUrl("http://localhost:8080/json").setJson(json);
         System.out.println(poolHttpClient.sendPost()+"1");
     }
 
@@ -47,20 +51,24 @@ public class AppTest {
     @Test
     public void poolSenPostForm(){
         PoolHttpClient poolHttpClient =  new PoolHttpClient();
-        poolHttpClient.setUrl(url_form).setJson(json).setMode(HttpConstant.FORM);
+        Map map = new HashMap();
+        map.put(HttpConstant.CONTENT_TYPE,HttpConstant.FORM);
+        poolHttpClient.setUrl(url_form).setJson(json).setHeader(map);
         System.out.println(poolHttpClient.sendPost()+"3");
     }
 
-    //@Test
+    @Test
     public void multiSendPostJson(){
         MultiHttpClient client = new MultiHttpClient();
-        System.out.println(client.sendPost(url_json, json, HttpConstant.BODY)+"4");
+        System.out.println(client.sendPost(url_json, json,HttpConstant.DEFAULT_REQUEST_HEADER)+"4");
     }
 
     @Test
     public void multiSendPostForm(){
         MultiHttpClient client = new MultiHttpClient();
-        System.out.println(client.sendPost(url_form, json,HttpConstant.FORM)+"5");
+        Map map = new HashMap();
+        map.put(HttpConstant.CONTENT_TYPE,HttpConstant.FORM);
+        System.out.println(client.sendPost(url_form, json,map)+"5");
     }
 
     @Test
@@ -70,21 +78,15 @@ public class AppTest {
     }
 
     @Test
-    public void resolveClientTest(){
+    public void resolveClientTest() throws JsonProcessingException {
         ResolveDataHttpClient client = new ResolveDataHttpClient(new MultiHttpClient());
 
-        /*try {
-            String s = client.sendPost(url_json,HttpConstant.BODY,map);
-            System.out.println(s);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }*/
+        String s = client.sendPost(url_json, map);
+        System.out.println(s);
 
-        System.out.println(client.sendGet("http://www.cheungz.xyz/article/26"));
+        //System.out.println(client.sendGet("http://www.cheungz.xyz/article/26"));
 
 
     }
-
-
 
 }

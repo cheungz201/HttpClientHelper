@@ -1,5 +1,8 @@
 package xyz.cheungz.httphelper.constant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * http相关字段常量
  *
@@ -39,6 +42,15 @@ public class HttpConstant {
      * post请求
      */
     public final static String POST = "post";
+
+    /**
+     *
+     */
+    public final static Map<String, String> DEFAULT_REQUEST_HEADER = new HashMap<>();
+
+    static {
+        DEFAULT_REQUEST_HEADER.put(CONTENT_TYPE, BODY);
+    }
 
 
 

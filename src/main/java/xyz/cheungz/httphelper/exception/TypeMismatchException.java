@@ -13,4 +13,8 @@ public class TypeMismatchException extends RuntimeException{
     public TypeMismatchException(String details){
         super(details);
     }
+
+    public TypeMismatchException() {
+        super("type mismatch !");
+    }
 }
