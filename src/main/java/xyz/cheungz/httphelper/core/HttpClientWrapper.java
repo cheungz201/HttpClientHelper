@@ -39,30 +39,4 @@ public abstract class HttpClientWrapper extends AbstractHttpClient {
         return sendGet(url,HttpConstant.DEFAULT_REQUEST_HEADER);
     }
 
-    /**
-     * 发送post请求
-     * @param url 请求地址
-     * @param data 请求数据
-     * @param header 请求头
-     * @throws JsonProcessingException
-     * @return 响应数据
-     */
-    public String sendPost(String url,Map data,Map<String, String> header) throws JsonProcessingException {
-        String json = resolveMap(data);
-        return client.sendPost(url, json, header);
-    }
-
-    public String sendPost(String url,Map data) throws JsonProcessingException {
-        String json = resolveMap(data);
-        return client.sendPost(url, json, HttpConstant.DEFAULT_REQUEST_HEADER);
-    }
-
-    /**
-     * 解析map为json
-     * @param map 请求数据
-     * @return 解析结果
-     * @throws JsonProcessingException
-     */
-    public abstract String resolveMap(Map map) throws JsonProcessingException;
-
 }
