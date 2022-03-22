@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import xyz.cheungz.httphelper.constant.HttpConstant;
 import xyz.cheungz.httphelper.core.AbstractHttpClient;
 import xyz.cheungz.httphelper.exception.ParameterException;
+import xyz.cheungz.httphelper.utils.BaseUtils;
 
 import java.util.Map;
 
@@ -19,7 +20,6 @@ public class MultiHttpClient extends AbstractHttpClient {
 
     private String url;
     private String json;
-    private Map<String,String> header;
 
     public MultiHttpClient(String url, String json,Map<String, String> header) {
         this.url = url;
@@ -83,25 +83,40 @@ public class MultiHttpClient extends AbstractHttpClient {
         throw new ParameterException();
     }
 
+
     @Override
     public String sendGet(String url, Map<String, String> header) {
         return multiSend(url,"",HttpConstant.GET,header);
     }
 
+    /**
+     * 设置请求头的get请求
+     * @param header
+     * @return 响应数据
+     */
     public String sendGet(Map<String, String> header){
-        if (StringUtils.isNotBlank(this.url) && StringUtils.isNotBlank(this.json)){
-            return sendPost(this.url,this.json,header);
+        if (StringUtils.isNotBlank(this.url)){
+            return sendGet(this.url,header);
         }
         throw new ParameterException();
     }
 
+    /**
+     * 指定url发送get请求
+     * @param url url地址
+     * @return 响应数据
+     */
     public String sendGet(String url){
         return sendGet(url,this.header);
     }
 
+    /**
+     * 默认的get请求，在构造器中赋值后可直接调用该方法
+     * @return
+     */
     public String sendGet(){
-        if (StringUtils.isNotBlank(this.url) && StringUtils.isNotBlank(this.json)){
-            return sendPost(this.url,this.json,this.header);
+        if (StringUtils.isNotBlank(this.url)){
+            return sendGet(this.url,this.header);
         }
         throw new ParameterException();
     }

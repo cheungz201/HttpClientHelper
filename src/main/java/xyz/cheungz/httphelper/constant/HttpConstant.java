@@ -44,12 +44,19 @@ public class HttpConstant {
     public final static String POST = "post";
 
     /**
+     * Cookie
+     */
+    public final static String COOKIE = "Cookie";
+
+    /**
      *
      */
     public final static Map<String, String> DEFAULT_REQUEST_HEADER = new HashMap<>();
 
     static {
         DEFAULT_REQUEST_HEADER.put(CONTENT_TYPE, BODY);
+        DEFAULT_REQUEST_HEADER.put("User-Agent","Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1");
+        DEFAULT_REQUEST_HEADER.put("Accept","*/*");
     }
 
 

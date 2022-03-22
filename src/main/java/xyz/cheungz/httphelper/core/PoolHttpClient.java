@@ -1,8 +1,10 @@
 package xyz.cheungz.httphelper.core;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import xyz.cheungz.httphelper.constant.HttpConstant;
 import xyz.cheungz.httphelper.exception.ParameterException;
+import xyz.cheungz.httphelper.utils.BaseUtils;
 
 import java.util.Map;
 
@@ -18,7 +20,6 @@ public class PoolHttpClient extends AbstractHttpClient {
 
     private String url;
     private String json;
-    private Map<String, String> header;
 
     public PoolHttpClient(String url, String json) {
         this.url = url;
@@ -105,7 +106,10 @@ public class PoolHttpClient extends AbstractHttpClient {
      * @return 响应数据
      */
     public String sendGet() {
-        return sendGet(this.url,this.header);
+        if (StringUtils.isNotBlank(this.url)) {
+            return sendGet(this.url, this.header);
+        }
+        throw new NullPointerException(" url is null !");
     }
 
     /**
@@ -114,6 +118,10 @@ public class PoolHttpClient extends AbstractHttpClient {
      * @return 响应请求
      */
     public String sendGet(Map<String, String> header){
-        return sendGet(this.url,header);
+        if (StringUtils.isNotBlank(this.url)){
+            return sendGet(this.url,header);
+        }
+        throw new NullPointerException(" url is null !");
     }
+
 }

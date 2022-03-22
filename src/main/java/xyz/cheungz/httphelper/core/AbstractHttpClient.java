@@ -40,6 +40,8 @@ import java.util.Map;
  **/
 public abstract class AbstractHttpClient implements HttpAble {
 
+    protected Map<String, String> header;
+
     Logger logger = LogUtil.getLogger(this.getClass());
 
     /**
@@ -152,7 +154,7 @@ public abstract class AbstractHttpClient implements HttpAble {
      * 发送multiPost
      * @param url  请求地址
      * @param json 请求数据
-     * @param mode content-type
+     * @param header 请求头
      * @return 响应数据
      */
     private String multiPostSend(String url, String json, Map<String,String> header) {
@@ -191,6 +193,7 @@ public abstract class AbstractHttpClient implements HttpAble {
         setHeader(header,request);
         try {
             multiHttpClient.executeMethod(request);
+
             result = BaseUtils.inStreamToString(request.getResponseBodyAsStream());
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -249,5 +252,25 @@ public abstract class AbstractHttpClient implements HttpAble {
         }else  {
             throw new TypeMismatchException("request parameter mismatch");
         }
+    }
+
+    /**
+     * 往请求头中添加cookie
+     * @param cookies
+     */
+    public void setCookies(Map<String, String> cookies){
+        boolean success = BaseUtils.setCookies(this.header, cookies);
+        if (!success){
+            throw new RuntimeException("add cookie fail !");
+        }
+    }
+
+    /**
+     * 设置cookie
+     * @param key cookie键
+     * @param value cookie值
+     */
+    public void setCookie(String key, String value){
+        this.header.put(HttpConstant.COOKIE,key+"="+value+";");
     }
 }

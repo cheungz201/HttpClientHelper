@@ -7,6 +7,7 @@ import xyz.cheungz.httphelper.core.PoolHttpClient;
 import xyz.cheungz.httphelper.core.ResolveDataHttpClient;
 import xyz.cheungz.httphelper.core.multithreading.MultiHttpClient;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +46,10 @@ public class AppTest {
     public void poolSendGet(){
         PoolHttpClient poolHttpClient = new PoolHttpClient();
         poolHttpClient.setUrl("http://localhost:8080/get?username=zhangsan");
+        Map<String,String> cookies = new HashMap<>();
+        cookies.put("zhansgan","18");
+        cookies.put("lisi","19");
+        poolHttpClient.setCookies(cookies);
         System.out.println(poolHttpClient.sendGet()+"2");
     }
 
@@ -87,6 +92,23 @@ public class AppTest {
         //System.out.println(client.sendGet("http://www.cheungz.xyz/article/26"));
 
 
+    }
+
+    @Test
+    public void Date(){
+        Date date = new Date();
+        date.setTime(1647878756135l);
+        System.out.println(date);
+    }
+
+
+    @Test
+    public void Web(){
+        MultiHttpClient client = new MultiHttpClient();
+        client.setUrl("http://localhost/admin/index");
+        client.setCookie("JSESSIONID","668BA512BDD8098A3A654B1DCCA63143");
+        String s = client.sendGet();
+        System.out.println(s);
     }
 
 }

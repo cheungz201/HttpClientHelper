@@ -75,4 +75,21 @@ public class BaseUtils {
         }
         return false;
     }
+
+    /**
+     * 设置cookie，成功返回true，失败返回false
+     * @param cookies
+     * @return boolean
+     */
+    public static boolean setCookies(Map<String, String> headers,Map<String, String> cookies){
+        if (cookies == null){
+            throw new NullPointerException("cookies is null !");
+        }
+        StringBuffer cookiesString = new StringBuffer();
+        for (String key : cookies.keySet()){
+            cookiesString.append(key+"="+cookies.get(key)+";");
+        }
+        headers.put(HttpConstant.COOKIE,cookiesString.toString());
+        return true;
+    }
 }
