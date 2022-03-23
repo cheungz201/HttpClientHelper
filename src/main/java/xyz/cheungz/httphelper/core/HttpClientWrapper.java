@@ -1,9 +1,7 @@
 package xyz.cheungz.httphelper.core;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import xyz.cheungz.httphelper.constant.HttpConstant;
-
-import java.util.Map;
+import xyz.cheungz.httphelper.entity.RequestBody;
+import xyz.cheungz.httphelper.entity.ResponseBody;
 
 /**
  * HTTPClient装饰器
@@ -22,21 +20,13 @@ public abstract class HttpClientWrapper extends AbstractHttpClient {
     }
 
     @Override
-    public String sendPost(String url, String json, Map<String, String> header) {
-        return client.sendPost(url,json,header);
+    public ResponseBody sendPost(RequestBody requestBody) {
+        return client.sendPost(requestBody);
     }
 
     @Override
-    public String sendGet(String url,Map<String, String> header) {
-        return client.sendGet(url,header);
-    }
-
-    public String sendPost(String url,String json){
-        return sendPost(url,json, HttpConstant.DEFAULT_REQUEST_HEADER);
-    }
-
-    public String sendGet(String url){
-        return sendGet(url,HttpConstant.DEFAULT_REQUEST_HEADER);
+    public ResponseBody sendGet(RequestBody requestBody) {
+        return client.sendGet(requestBody);
     }
 
 }

@@ -1,5 +1,9 @@
 package xyz.cheungz.httphelper.constant;
 
+import sun.util.resources.cldr.zh.CalendarData_zh_Hans_HK;
+import xyz.cheungz.httphelper.entity.Cookie;
+import xyz.cheungz.httphelper.entity.Header;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,14 +53,26 @@ public class HttpConstant {
     public final static String COOKIE = "Cookie";
 
     /**
-     *
+     * 响应结果
      */
-    public final static Map<String, String> DEFAULT_REQUEST_HEADER = new HashMap<>();
+    public final static String RESPONSE_RESULT = "result";
+
+    /**
+     * 默认的Header
+     */
+    public final static Header DEFAULT_REQUEST_HEADER = new Header();
+
+    /**
+     * 默认的请求头
+     */
+    public final static Map<String, String> HEADER = new HashMap<>();
 
     static {
-        DEFAULT_REQUEST_HEADER.put(CONTENT_TYPE, BODY);
-        DEFAULT_REQUEST_HEADER.put("User-Agent","Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1");
-        DEFAULT_REQUEST_HEADER.put("Accept","*/*");
+        HEADER.put(CONTENT_TYPE, BODY);
+        HEADER.put("User-Agent","Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1");
+        HEADER.put("Accept","*/*");
+        DEFAULT_REQUEST_HEADER.setHeaders(HEADER);
+        DEFAULT_REQUEST_HEADER.setCookies(new Cookie().setCookies(new HashMap<>()));
     }
 
 

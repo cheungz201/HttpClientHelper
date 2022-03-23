@@ -1,12 +1,9 @@
 package xyz.cheungz.httphelper.core;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import xyz.cheungz.httphelper.constant.HttpConstant;
-import xyz.cheungz.httphelper.exception.ParameterException;
-import xyz.cheungz.httphelper.utils.BaseUtils;
-
-import java.util.Map;
+import xyz.cheungz.httphelper.entity.Header;
+import xyz.cheungz.httphelper.entity.RequestBody;
+import xyz.cheungz.httphelper.entity.ResponseBody;
 
 /**
  * 请求发送器
@@ -18,110 +15,23 @@ import java.util.Map;
  **/
 public class PoolHttpClient extends AbstractHttpClient {
 
-    private String url;
-    private String json;
-
-    public PoolHttpClient(String url, String json) {
-        this.url = url;
-        this.json = json;
-        this.header = HttpConstant.DEFAULT_REQUEST_HEADER;
-    }
-
-    public PoolHttpClient(String url, String json, Map<String, String> header) {
-        this.url = url;
-        this.json = json;
-        this.header = header;
-    }
-
     public PoolHttpClient() {
-        this.header = HttpConstant.DEFAULT_REQUEST_HEADER;
+        this.headers = HttpConstant.DEFAULT_REQUEST_HEADER;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public PoolHttpClient setUrl(String url) {
-        this.url = url;
-        return this;
-    }
-
-    public String getJson() {
-        return json;
-    }
-
-    public PoolHttpClient setJson(String json) {
-        this.json = json;
-        return this;
-    }
-
-    public Map<String, String> getHeader() {
-        return header;
-    }
-
-    public PoolHttpClient setHeader(Map<String, String> header) {
-        this.header = header;
-        return this;
+    public PoolHttpClient(Header header){
+        this.headers = header;
     }
 
     @Override
-    public String sendPost(String url, String json, Map<String, String> header) {
-        return send(url,json,HttpConstant.POST,header);
-    }
-
-    /**
-     * post的默认调用
-     * @return 响应数据
-     */
-    public String sendPost() {
-        if (StringUtils.isNotBlank(this.url) && StringUtils.isNotBlank(this.json)){
-            return sendPost(this.url,this.json,header);
-        }
-        throw new ParameterException();
-    }
-
-    public String sendPost(String url,String json){
-        return sendPost(url,json,HttpConstant.DEFAULT_REQUEST_HEADER);
-    }
-
-    /**
-     * 指定header的post请求
-     * @param header
-     * @return 响应数据
-     */
-    public String sendPost(Map<String, String> header){
-        if (StringUtils.isNotBlank(this.url) && StringUtils.isNotBlank(this.json)){
-            return sendPost(this.url,this.json,header);
-        }
-        throw new ParameterException();
+    public ResponseBody sendPost(RequestBody requestBody) {
+        requestBody.setMethod(HttpConstant.POST);
+        return poolSend(requestBody);
     }
 
     @Override
-    public String sendGet(String url,Map<String, String> header) {
-        return send(url,"",HttpConstant.GET,header);
+    public ResponseBody sendGet(RequestBody requestBody) {
+        requestBody.setMethod(HttpConstant.GET);
+        return poolSend(requestBody);
     }
-
-    /**
-     * get默认调用
-     * @return 响应数据
-     */
-    public String sendGet() {
-        if (StringUtils.isNotBlank(this.url)) {
-            return sendGet(this.url, this.header);
-        }
-        throw new NullPointerException(" url is null !");
-    }
-
-    /**
-     * 指定header的get请求
-     * @param header
-     * @return 响应请求
-     */
-    public String sendGet(Map<String, String> header){
-        if (StringUtils.isNotBlank(this.url)){
-            return sendGet(this.url,header);
-        }
-        throw new NullPointerException(" url is null !");
-    }
-
 }

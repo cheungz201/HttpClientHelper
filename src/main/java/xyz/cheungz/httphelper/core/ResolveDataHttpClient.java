@@ -1,7 +1,8 @@
 package xyz.cheungz.httphelper.core;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import xyz.cheungz.httphelper.constant.HttpConstant;
+import xyz.cheungz.httphelper.entity.RequestBody;
+import xyz.cheungz.httphelper.entity.ResponseBody;
 import xyz.cheungz.httphelper.utils.SerializationUtil;
 
 import java.util.Map;
@@ -30,22 +31,13 @@ public class ResolveDataHttpClient extends HttpClientWrapper{
         return SerializationUtil.obj2String(map);
     }
 
-    /**
-     * 发送post请求
-     * @param url 请求地址
-     * @param data 请求数据
-     * @param header 请求头
-     * @throws JsonProcessingException
-     * @return 响应数据
-     */
-    public String sendPost(String url,Map data,Map<String, String> header) throws JsonProcessingException {
-        String json = resolveMap(data);
-        return super.sendPost(url, json, header);
+    public ResponseBody sendPost(RequestBody requestBody,Map<String,String> data) {
+        try {
+            String json = resolveMap(data);
+            requestBody.setData(json);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return super.sendPost(requestBody);
     }
-
-    public String sendPost(String url,Map data) throws JsonProcessingException {
-        String json = resolveMap(data);
-        return super.sendPost(url, json, HttpConstant.DEFAULT_REQUEST_HEADER);
-    }
-
 }
