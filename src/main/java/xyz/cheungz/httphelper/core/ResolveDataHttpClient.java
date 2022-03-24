@@ -3,6 +3,7 @@ package xyz.cheungz.httphelper.core;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import xyz.cheungz.httphelper.entity.RequestBody;
 import xyz.cheungz.httphelper.entity.ResponseBody;
+import xyz.cheungz.httphelper.exception.HttpException;
 import xyz.cheungz.httphelper.utils.SerializationUtil;
 
 import java.util.Map;
@@ -31,7 +32,7 @@ public class ResolveDataHttpClient extends HttpClientWrapper{
         return SerializationUtil.obj2String(map);
     }
 
-    public ResponseBody sendPost(RequestBody requestBody,Map<String,String> data) {
+    public ResponseBody sendPost(RequestBody requestBody,Map<String,String> data) throws HttpException {
         try {
             String json = resolveMap(data);
             requestBody.setData(json);

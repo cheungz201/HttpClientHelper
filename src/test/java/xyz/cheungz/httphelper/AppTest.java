@@ -8,6 +8,7 @@ import xyz.cheungz.httphelper.core.ResolveDataHttpClient;
 import xyz.cheungz.httphelper.core.multithreading.MultiHttpClient;
 import xyz.cheungz.httphelper.entity.RequestBody;
 import xyz.cheungz.httphelper.entity.ResponseBody;
+import xyz.cheungz.httphelper.exception.HttpException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,17 +31,14 @@ public class AppTest {
 
 
     @Test
-    public void poolSendPostJson() {
+    public void poolSendPostJson() throws HttpException {
         PoolHttpClient poolHttpClient = new PoolHttpClient();
         ResponseBody responseBody = poolHttpClient.sendPost(new RequestBody(url_json, json));
-        System.out.println(responseBody.getResult());
-        System.out.println(responseBody.getHeader().toString());
+        System.out.println(responseBody.getResponseCode());
     }
 
     @Test
     public void poolSendPostJsonNoHeader() {
-        PoolHttpClient poolHttpClient = new PoolHttpClient();
-        poolSendGet();
     }
 
     @Test
@@ -56,6 +54,11 @@ public class AppTest {
     @Test
     public void multiSendPostJson(){
         MultiHttpClient client = new MultiHttpClient();
+        RequestBody requestBody = new RequestBody("http://cheungz.xyz/admin/index");
+        client.setCookie("JSESSIONID","C1A12A6A24EAA18A21593885198F5719");
+        ResponseBody responseBody = client.sendGet(requestBody);
+        System.out.println(responseBody.getResult());
+
     }
 
     @Test

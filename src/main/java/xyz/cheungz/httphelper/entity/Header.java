@@ -1,9 +1,12 @@
 package xyz.cheungz.httphelper.entity;
 
+import org.apache.commons.httpclient.Cookie;
+import xyz.cheungz.httphelper.constant.HttpConstant;
+
 import java.util.Map;
 
 /**
- * detail
+ * 请求头
  *
  * @Program: HttpClientHelper
  * @Author: Zhang Zhe
@@ -12,24 +15,21 @@ import java.util.Map;
  **/
 public class Header {
 
-    private Cookie cookies;
+    private Cookie[] cookies;
     private Map<String, String> headers;
 
-    public Header(Cookie cookies, Map<String, String> headers) {
-        this.cookies = cookies;
-        this.headers = headers;
-    }
 
-    public Header() {
-    }
-
-    public Cookie getCookies() {
+    public Cookie[] getCookies() {
         return cookies;
     }
 
-    public Header setCookies(Cookie cookies) {
+    public Header setCookies(Cookie[] cookies) {
         this.cookies = cookies;
         return this;
+    }
+
+    public Header(Map<String, String> headers) {
+        this.headers = headers;
     }
 
     public Map<String, String> getHeaders() {
@@ -41,11 +41,13 @@ public class Header {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "Header{" +
-                "cookies=" + cookies +
-                ", headers=" + headers +
-                '}';
+    public Header(Cookie[] cookies, Map<String, String> headers) {
+        this.cookies = cookies;
+        this.headers = headers;
+    }
+
+    public Header() {
+        this.headers = HttpConstant.HEADER;
+        this.cookies = null;
     }
 }

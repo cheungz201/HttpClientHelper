@@ -14,7 +14,20 @@ public class TypeMismatchException extends RuntimeException{
         super(details);
     }
 
+    public TypeMismatchException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public TypeMismatchException(Throwable cause) {
+        super(cause);
+    }
+
+    public TypeMismatchException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+
     public TypeMismatchException() {
         super("type mismatch !");
     }
+
 }

@@ -1,7 +1,6 @@
 package xyz.cheungz.httphelper.constant;
 
-import sun.util.resources.cldr.zh.CalendarData_zh_Hans_HK;
-import xyz.cheungz.httphelper.entity.Cookie;
+import org.apache.commons.httpclient.Cookie;
 import xyz.cheungz.httphelper.entity.Header;
 
 import java.util.HashMap;
@@ -72,7 +71,7 @@ public class HttpConstant {
         HEADER.put("User-Agent","Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1");
         HEADER.put("Accept","*/*");
         DEFAULT_REQUEST_HEADER.setHeaders(HEADER);
-        DEFAULT_REQUEST_HEADER.setCookies(new Cookie().setCookies(new HashMap<>()));
+        DEFAULT_REQUEST_HEADER.setCookies(null);
     }
 
 

@@ -2,6 +2,7 @@ package xyz.cheungz.httphelper.core;
 
 import xyz.cheungz.httphelper.entity.RequestBody;
 import xyz.cheungz.httphelper.entity.ResponseBody;
+import xyz.cheungz.httphelper.exception.HttpException;
 
 /**
  * 请求发送抽象接口
@@ -18,13 +19,13 @@ public interface HttpAble {
      * @param requestBody 请求体
      * @return 响应数据
      */
-    ResponseBody sendPost(RequestBody requestBody);
+    ResponseBody sendPost(RequestBody requestBody) throws HttpException;
 
     /**
      * 发送get请求
      * @param requestBody 请求体
      * @return 响应数据
      */
-    ResponseBody sendGet(RequestBody requestBody);
+    ResponseBody sendGet(RequestBody requestBody) throws HttpException;
 
 }

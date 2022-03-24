@@ -4,6 +4,7 @@ import xyz.cheungz.httphelper.constant.HttpConstant;
 import xyz.cheungz.httphelper.entity.Header;
 import xyz.cheungz.httphelper.entity.RequestBody;
 import xyz.cheungz.httphelper.entity.ResponseBody;
+import xyz.cheungz.httphelper.exception.HttpException;
 
 /**
  * 请求发送器
@@ -24,13 +25,13 @@ public class PoolHttpClient extends AbstractHttpClient {
     }
 
     @Override
-    public ResponseBody sendPost(RequestBody requestBody) {
+    public ResponseBody sendPost(RequestBody requestBody) throws HttpException {
         requestBody.setMethod(HttpConstant.POST);
         return poolSend(requestBody);
     }
 
     @Override
-    public ResponseBody sendGet(RequestBody requestBody) {
+    public ResponseBody sendGet(RequestBody requestBody) throws HttpException {
         requestBody.setMethod(HttpConstant.GET);
         return poolSend(requestBody);
     }

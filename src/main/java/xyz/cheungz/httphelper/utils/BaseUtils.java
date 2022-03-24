@@ -1,5 +1,7 @@
 package xyz.cheungz.httphelper.utils;
 
+import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -7,7 +9,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.CharArrayBuffer;
 import org.apache.http.util.EntityUtils;
 import xyz.cheungz.httphelper.constant.HttpConstant;
-import xyz.cheungz.httphelper.entity.Cookie;
 import xyz.cheungz.httphelper.entity.ResponseBody;
 
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class BaseUtils {
      * @param cookies
      * @return boolean
      */
-    public static boolean setCookies(xyz.cheungz.httphelper.entity.Header header, Cookie cookies){
+    public static boolean setCookies(xyz.cheungz.httphelper.entity.Header header, Cookie[] cookies){
         if (cookies == null){
             throw new NullPointerException("cookies is null !");
         }
@@ -101,28 +102,18 @@ public class BaseUtils {
      * @return
      */
     public static ResponseBody getResponse(CloseableHttpResponse response){
-        if (response == null){
-            throw new NullPointerException("response is null !");
-        }
         try {
             ResponseBody responseBody = new ResponseBody();
             String result = entityToString(response.getEntity());
             Header[] allHeaders = response.getAllHeaders();
-            // Headers
+            // get Headers
             Map<String,String> headers = new HashMap<>();
-
-            // Cookies
-            Map<String,String> cookies = new HashMap<>();
-
             for (Header header: allHeaders){
-                if (HttpConstant.COOKIE.equalsIgnoreCase(header.getName())) {
-                    cookies.put(header.getName(),header.getValue());
-                }else {
-                    headers.put(header.getName(),header.getValue());
-                }
+                headers.put(header.getName(),header.getValue());
             }
             responseBody.setResult(result);
-            responseBody.setHeader(new xyz.cheungz.httphelper.entity.Header(new Cookie(cookies),headers));
+            responseBody.setHeader(new xyz.cheungz.httphelper.entity.Header(headers));
+            responseBody.setResponseCode(response.getStatusLine().getStatusCode());
             return responseBody;
         } catch (IOException e) {
             e.printStackTrace();
@@ -136,29 +127,23 @@ public class BaseUtils {
      * @param request
      * @return
      */
-    public static ResponseBody getResponse(HttpMethod request){
-        if (request == null){
-            throw new NullPointerException("HttpMethod is null !");
-        }
+    public static ResponseBody getResponse(HttpClient client, HttpMethod request){
         try {
             ResponseBody responseBody = new ResponseBody();
             String result = inStreamToString(request.getResponseBodyAsStream());
-            // Headers
-            Map<String,String> header = new HashMap<>();
 
-            // Cookies
-            Map<String,String> cookies = new HashMap<>();
-
+            // add cookies
+            Cookie[] cookies = client.getState().getCookies();
+            // add headers
+            Map<String,String> headers = new HashMap<>();
             org.apache.commons.httpclient.Header[] responseHeaders = request.getResponseHeaders();
             for (org.apache.commons.httpclient.Header responseHeader : responseHeaders){
-                if (HttpConstant.COOKIE.equalsIgnoreCase(responseHeader.getValue())) {
-                    cookies.put(responseHeader.getName(),responseHeader.getValue());
-                }else {
-                    header.put(responseHeader.getValue(),responseHeader.getValue());
-                }
+                    headers.put(responseHeader.getName(),responseHeader.getValue());
             }
+
             responseBody.setResult(result);
-            responseBody.setHeader(new xyz.cheungz.httphelper.entity.Header(new Cookie(cookies),header));
+            responseBody.setHeader(new xyz.cheungz.httphelper.entity.Header(cookies,headers));
+            responseBody.setResponseCode(request.getStatusCode());
             return responseBody;
         } catch (IOException e) {
             e.printStackTrace();
@@ -169,13 +154,20 @@ public class BaseUtils {
     /**
      * 得到cookies的结构体
      *
-     * @param cookies cookies
+     * @param header 请求头
      * @return cookies to string."k=v;"
      */
-    public static String getCookieBody(Map<String,String> cookies){
+    public static String getCookieBody(xyz.cheungz.httphelper.entity.Header header){
+        if (header.getCookies() == null){
+            return null;
+        }
+        Cookie[] cookies = header.getCookies();
         StringBuffer buffer = new StringBuffer();
-        for (String key : cookies.keySet()){
-            buffer.append(key+"="+cookies.get(key)+";");
+        for (Cookie cookie : cookies){
+            if (cookie == null){
+                return buffer.toString();
+            }
+            buffer.append(cookie.getName()+"="+cookie.getValue()+";");
         }
         return buffer.toString();
     }
