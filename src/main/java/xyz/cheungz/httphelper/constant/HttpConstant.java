@@ -1,11 +1,5 @@
 package xyz.cheungz.httphelper.constant;
 
-import org.apache.commons.httpclient.Cookie;
-import xyz.cheungz.httphelper.entity.Header;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * http相关字段常量
  *
@@ -55,25 +49,5 @@ public class HttpConstant {
      * 响应结果
      */
     public final static String RESPONSE_RESULT = "result";
-
-    /**
-     * 默认的Header
-     */
-    public final static Header DEFAULT_REQUEST_HEADER = new Header();
-
-    /**
-     * 默认的请求头
-     */
-    public final static Map<String, String> HEADER = new HashMap<>();
-
-    static {
-        HEADER.put(CONTENT_TYPE, BODY);
-        HEADER.put("User-Agent","Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1");
-        HEADER.put("Accept","*/*");
-        DEFAULT_REQUEST_HEADER.setHeaders(HEADER);
-        DEFAULT_REQUEST_HEADER.setCookies(null);
-    }
-
-
 
 }

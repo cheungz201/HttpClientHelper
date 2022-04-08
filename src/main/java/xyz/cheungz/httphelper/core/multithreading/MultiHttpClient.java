@@ -16,14 +16,13 @@ import xyz.cheungz.httphelper.entity.ResponseBody;
  **/
 public class MultiHttpClient extends AbstractHttpClient {
 
+    public MultiHttpClient() {
+    }
 
     public MultiHttpClient(Header header) {
         this.headers = header;
     }
 
-    public MultiHttpClient() {
-        this.headers = HttpConstant.DEFAULT_REQUEST_HEADER;
-    }
 
 
     public Header getHeader() {

@@ -17,7 +17,6 @@ import xyz.cheungz.httphelper.exception.HttpException;
 public class PoolHttpClient extends AbstractHttpClient {
 
     public PoolHttpClient() {
-        this.headers = HttpConstant.DEFAULT_REQUEST_HEADER;
     }
 
     public PoolHttpClient(Header header){

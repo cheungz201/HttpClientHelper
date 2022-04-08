@@ -1,7 +1,6 @@
 package xyz.cheungz.httphelper.entity;
 
 import org.apache.commons.httpclient.Cookie;
-import xyz.cheungz.httphelper.constant.HttpConstant;
 
 import java.util.Map;
 
@@ -47,7 +46,5 @@ public class Header {
     }
 
     public Header() {
-        this.headers = HttpConstant.HEADER;
-        this.cookies = null;
     }
 }

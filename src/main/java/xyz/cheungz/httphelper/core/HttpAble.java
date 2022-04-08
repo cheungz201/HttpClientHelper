@@ -18,6 +18,7 @@ public interface HttpAble {
      * 发送post请求
      * @param requestBody 请求体
      * @return 响应数据
+     * @throws HttpException
      */
     ResponseBody sendPost(RequestBody requestBody) throws HttpException;
 
@@ -25,6 +26,7 @@ public interface HttpAble {
      * 发送get请求
      * @param requestBody 请求体
      * @return 响应数据
+     * @throws HttpException
      */
     ResponseBody sendGet(RequestBody requestBody) throws HttpException;
 
