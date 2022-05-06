@@ -1,7 +1,6 @@
 package xyz.cheungz.httphelper.core;
 
 
-import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -26,10 +25,12 @@ import xyz.cheungz.httphelper.utils.BaseUtils;
 import xyz.cheungz.httphelper.utils.ClientFactory;
 import xyz.cheungz.httphelper.utils.LogUtil;
 import xyz.cheungz.httphelper.utils.SerializationUtil;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -56,19 +57,11 @@ public abstract class AbstractHttpClient implements HttpAble {
      */
     private final static HttpClient multiHttpClient = ClientFactory.getMultiHttpClient();
 
-    /**
-     * 发送post请求
-     * @param requestBody 请求体
-     * @return 响应数据
-     */
+
     @Override
     public abstract ResponseBody sendPost(RequestBody requestBody) throws HttpException;
 
-    /**
-     * 发送get请求
-     * @param requestBody 请求体
-     * @return 响应数据
-     */
+
     @Override
     public abstract ResponseBody sendGet(RequestBody requestBody) throws HttpException;
 
@@ -170,9 +163,12 @@ public abstract class AbstractHttpClient implements HttpAble {
                 throw new TypeMismatchException("content-type not found");
             }
             multiHttpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
-            multiHttpClient.executeMethod(request);
+            int code = multiHttpClient.executeMethod(request);
+            if (code != 200){
+                throw new HttpException("error code:" + code);
+            }
             result = BaseUtils.getResponse(multiHttpClient,request);
-        } catch (IOException e) {
+        } catch (IOException | HttpException e) {
             logger.error(e.getMessage());
         } finally {
             request.releaseConnection();
@@ -191,9 +187,12 @@ public abstract class AbstractHttpClient implements HttpAble {
         setHeader(requestBody.getHeader(), request);
         try {
             multiHttpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
-            multiHttpClient.executeMethod(request);
+            int code = multiHttpClient.executeMethod(request);
+            if (code != 200){
+                throw new HttpException("error code:" + code);
+            }
             result = BaseUtils.getResponse(multiHttpClient,request);
-        } catch (IOException e) {
+        } catch (IOException | HttpException e) {
             logger.error(e.getMessage());
         } finally {
             request.releaseConnection();
@@ -259,51 +258,5 @@ public abstract class AbstractHttpClient implements HttpAble {
         }else  {
             throw new TypeMismatchException("request parameter mismatch");
         }
-    }
-
-    /**
-     * 设置cookie
-     * 首先检查cookies,如果未初始化则初始化长度为5,再设置cookie。
-     * 如果数组已满，则扩容至旧数组的1.5倍(并非严格的1.5倍，若为偶数则为1.5倍，否则长度为旧数组长度1.5倍-1)
-     * 然后再添加cookie
-     *
-     * @param key cookie键
-     * @param value cookie值
-     */
-    public void setCookie(String key, String value){
-
-        Cookie[] cookies = this.headers.getCookies();
-        if (cookies == null){
-            cookies = new Cookie[5];
-            this.headers.setCookies(cookies);
-        }
-        if (setCookie(cookies,key,value)) {
-            return;
-        }
-        // 如果cookies已满,则扩容并且复制旧数组到新数组
-        Cookie[] newCookies = Arrays.copyOf(cookies, (cookies.length + cookies.length / 2));
-        this.headers.setCookies(newCookies);
-        setCookie(newCookies,key,value);
-    }
-
-    /**
-     * 设置cookie，成功返回true，否则返回false
-     * @param cookies newCookies
-     * @param key key
-     * @param value value
-     * @return boolean
-     */
-    private boolean setCookie(Cookie[] cookies, String key, String value){
-        for (int i = 0; i < cookies.length; i++){
-            Cookie cookie = cookies[i];
-            if (cookie == null) {
-                cookie = new Cookie();
-                cookie.setName(key);
-                cookie.setValue(value);
-                cookies[i] = cookie;
-                return true;
-            }
-        }
-        return false;
     }
 }

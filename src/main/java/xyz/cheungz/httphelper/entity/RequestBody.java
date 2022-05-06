@@ -1,8 +1,10 @@
 package xyz.cheungz.httphelper.entity;
 
+import org.apache.commons.httpclient.Cookie;
 import xyz.cheungz.httphelper.constant.HttpConstant;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,5 +104,51 @@ public class RequestBody implements Serializable {
     public RequestBody setHeader(Header header) {
         this.header = header;
         return this;
+    }
+
+    /**
+     * 设置cookie
+     * 首先检查cookies,如果未初始化则初始化长度为5,再设置cookie。
+     * 如果数组已满，则扩容至旧数组的1.5倍(并非严格的1.5倍，若为偶数则为1.5倍，否则长度为旧数组长度1.5倍-1)
+     * 然后再添加cookie
+     *
+     * @param key cookie键
+     * @param value cookie值
+     */
+    public void setCookie(String key, String value){
+
+        Cookie[] cookies = DEFAULT_REQUEST_HEADER.getCookies();
+        if (cookies == null){
+            cookies = new Cookie[5];
+            DEFAULT_REQUEST_HEADER.setCookies(cookies);
+        }
+        if (setCookie(cookies,key,value)) {
+            return;
+        }
+        // 如果cookies已满,则扩容并且复制旧数组到新数组
+        Cookie[] newCookies = Arrays.copyOf(cookies, (cookies.length + cookies.length / 2));
+        DEFAULT_REQUEST_HEADER.setCookies(newCookies);
+        setCookie(newCookies,key,value);
+    }
+
+    /**
+     * 设置cookie，成功返回true，否则返回false
+     * @param cookies newCookies
+     * @param key key
+     * @param value value
+     * @return boolean
+     */
+    private boolean setCookie(Cookie[] cookies, String key, String value){
+        for (int i = 0; i < cookies.length; i++){
+            Cookie cookie = cookies[i];
+            if (cookie == null) {
+                cookie = new Cookie();
+                cookie.setName(key);
+                cookie.setValue(value);
+                cookies[i] = cookie;
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -22,7 +22,7 @@ public class Header {
         return cookies;
     }
 
-    public Header setCookies(Cookie[] cookies) {
+    public Header setCookies(Cookie ...cookies) {
         this.cookies = cookies;
         return this;
     }

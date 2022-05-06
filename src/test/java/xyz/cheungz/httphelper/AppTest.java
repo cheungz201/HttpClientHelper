@@ -1,7 +1,5 @@
 package xyz.cheungz.httphelper;
 
-import org.apache.commons.lang3.builder.ToStringExclude;
-import org.apache.logging.log4j.core.util.JsonUtils;
 import org.junit.Test;
 import xyz.cheungz.httphelper.constant.HttpConstant;
 import xyz.cheungz.httphelper.core.PoolHttpClient;
@@ -75,5 +73,33 @@ public class AppTest {
     public void multiPostTestByXXX(){
         ResponseBody responseBody = multiHttpClient.sendPost(new RequestBody(url_form, json, HttpConstant.FORM));
         System.out.println(responseBody.getResult());
+    }
+
+    @Test
+    public void multiCookieTest(){
+        RequestBody requestBody = new RequestBody(url_get);
+        requestBody.setCookie("multiget","test!!");
+        multiHttpClient.sendGet(requestBody);
+    }
+
+    @Test
+    public void poolCookieTest() throws HttpException {
+        RequestBody requestBody = new RequestBody(url_get);
+        requestBody.setCookie("poolget","test!!");
+        poolHttpClient.sendGet(requestBody);
+    }
+
+    @Test
+    public void postPoolHttpClient(){
+        RequestBody requestBody = new RequestBody(url_json,json);
+        requestBody.setCookie("poolpost","test!!");
+        multiHttpClient.sendPost(requestBody);
+    }
+
+    @Test
+    public void postMultiHttpClient(){
+        RequestBody requestBody = new RequestBody(url_json,json);
+        requestBody.setCookie("multipost","test!!");
+        multiHttpClient.sendPost(requestBody);
     }
 }
