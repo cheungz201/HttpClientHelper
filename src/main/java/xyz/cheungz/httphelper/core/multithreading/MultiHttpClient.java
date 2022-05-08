@@ -5,6 +5,7 @@ import xyz.cheungz.httphelper.core.AbstractHttpClient;
 import xyz.cheungz.httphelper.entity.Header;
 import xyz.cheungz.httphelper.entity.RequestBody;
 import xyz.cheungz.httphelper.entity.ResponseBody;
+import xyz.cheungz.httphelper.exception.HttpException;
 
 /**
  * 线程安全的Http请求
@@ -36,13 +37,13 @@ public class MultiHttpClient extends AbstractHttpClient {
 
 
     @Override
-    public ResponseBody sendPost(RequestBody requestBody) {
+    public ResponseBody sendPost(RequestBody requestBody) throws HttpException {
         requestBody.setMethod(HttpConstant.POST);
         return multiSend(requestBody);
     }
 
     @Override
-    public ResponseBody sendGet(RequestBody requestBody) {
+    public ResponseBody sendGet(RequestBody requestBody) throws HttpException {
         requestBody.setMethod(HttpConstant.GET);
         return multiSend(requestBody);
     }

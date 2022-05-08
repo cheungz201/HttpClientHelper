@@ -4,7 +4,9 @@ import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.http.Header;
+import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.CharArrayBuffer;
 import org.apache.http.util.EntityUtils;
@@ -14,6 +16,8 @@ import xyz.cheungz.httphelper.entity.ResponseBody;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +33,7 @@ public class BaseUtils {
 
     /**
      * 处理HttpEntity实体
-     * @param entity
+     * @param entity 响应实体
      * @return 处理结果
      * @throws IOException
      * @return 处理结果
@@ -104,16 +108,34 @@ public class BaseUtils {
     public static ResponseBody getResponse(CloseableHttpResponse response){
         try {
             ResponseBody responseBody = new ResponseBody();
+            ArrayList<Cookie> cookieList = new ArrayList();
             String result = entityToString(response.getEntity());
             Header[] allHeaders = response.getAllHeaders();
             // get Headers
             Map<String,String> headers = new HashMap<>();
+            // 包装header和cookie
             for (Header header: allHeaders){
+                // 包装cookie
+                if ("Set-Cookie".equalsIgnoreCase(header.getName())){
+                    HeaderElement element = header.getElements()[0];
+                    Cookie cookie = new Cookie();
+                    NameValuePair[] parameters = element.getParameters();
+                    for (NameValuePair pair : parameters){
+                        if ("Max-Age".equalsIgnoreCase(pair.getName())){
+                            cookie.setExpiryDate(new Date(System.currentTimeMillis()+Integer.parseInt(pair.getValue())));
+                        }
+                    }
+                    cookie.setName(element.getName());
+                    cookie.setValue(element.getValue());
+                    cookieList.add(cookie);
+                }
+                // 包装header
                 headers.put(header.getName(),header.getValue());
             }
             responseBody.setResult(result);
             responseBody.setHeader(new xyz.cheungz.httphelper.entity.Header(headers));
             responseBody.setResponseCode(response.getStatusLine().getStatusCode());
+            responseBody.getHeader().setCookies(cookieList.toArray(new Cookie[cookieList.size()]));
             return responseBody;
         } catch (IOException e) {
             e.printStackTrace();
@@ -171,4 +193,5 @@ public class BaseUtils {
         }
         return buffer.toString();
     }
+
 }

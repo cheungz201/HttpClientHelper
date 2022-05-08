@@ -1,7 +1,7 @@
 package xyz.cheungz.httphelper.exception;
 
 /**
- * detail
+ * Http异常
  *
  * @Program: HttpClientHelper
  * @Author: Zhang Zhe

@@ -25,6 +25,7 @@ import xyz.cheungz.httphelper.utils.BaseUtils;
 import xyz.cheungz.httphelper.utils.ClientFactory;
 import xyz.cheungz.httphelper.utils.LogUtil;
 import xyz.cheungz.httphelper.utils.SerializationUtil;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -129,7 +130,7 @@ public abstract class AbstractHttpClient implements HttpAble {
      * @param requestBody 请求体
      * @return 响应数据
      */
-    protected ResponseBody multiSend(RequestBody requestBody){
+    protected ResponseBody multiSend(RequestBody requestBody) throws HttpException {
         ResponseBody result =  null;
         if (HttpConstant.POST.equalsIgnoreCase(requestBody.getMethod())){
             result = multiPostSend(requestBody);
@@ -147,7 +148,7 @@ public abstract class AbstractHttpClient implements HttpAble {
      * @param requestBody 请求体
      * @return 响应数据
      */
-    private ResponseBody multiPostSend(RequestBody requestBody) {
+    private ResponseBody multiPostSend(RequestBody requestBody) throws HttpException {
         PostMethod request = new PostMethod(requestBody.getUrl());
         ResponseBody result = null;
         try{
@@ -168,7 +169,7 @@ public abstract class AbstractHttpClient implements HttpAble {
                 throw new HttpException("error code:" + code);
             }
             result = BaseUtils.getResponse(multiHttpClient,request);
-        } catch (IOException | HttpException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage());
         } finally {
             request.releaseConnection();
@@ -181,7 +182,7 @@ public abstract class AbstractHttpClient implements HttpAble {
      * @param requestBody 请求体
      * @return 响应数据
      */
-    private ResponseBody multiGetSend(RequestBody requestBody) {
+    private ResponseBody multiGetSend(RequestBody requestBody) throws HttpException {
         ResponseBody result = null;
         GetMethod request = new GetMethod(requestBody.getUrl());
         setHeader(requestBody.getHeader(), request);
@@ -192,7 +193,7 @@ public abstract class AbstractHttpClient implements HttpAble {
                 throw new HttpException("error code:" + code);
             }
             result = BaseUtils.getResponse(multiHttpClient,request);
-        } catch (IOException | HttpException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage());
         } finally {
             request.releaseConnection();
