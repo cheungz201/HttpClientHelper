@@ -12,11 +12,11 @@ import xyz.cheungz.httphelper.exception.HttpException;
  * @Create: 2022-03-15 15:55
  * @Version: 1.0.0
  **/
-public abstract class HttpClientWrapper extends AbstractHttpClient {
+public abstract class HttpClientWrapper implements HttpAble {
 
-    private AbstractHttpClient client = null;
+    private HttpAble client = null;
 
-    public HttpClientWrapper(AbstractHttpClient client){
+    public HttpClientWrapper(HttpAble client){
         this.client = client;
     }
 

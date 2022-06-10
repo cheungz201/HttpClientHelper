@@ -18,7 +18,7 @@ import java.util.Map;
  **/
 public class ResolveDataHttpClient extends HttpClientWrapper{
 
-    public ResolveDataHttpClient(AbstractHttpClient client) {
+    public ResolveDataHttpClient(HttpAble client) {
         super(client);
     }
 
@@ -28,7 +28,7 @@ public class ResolveDataHttpClient extends HttpClientWrapper{
      * @return 解析结果
      * @throws JsonProcessingException
      */
-    public String resolveMap(Map map) throws JsonProcessingException {
+    private String resolveMap(Map map) throws JsonProcessingException {
         return SerializationUtil.obj2String(map);
     }
 
