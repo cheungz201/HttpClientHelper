@@ -1,7 +1,6 @@
 package xyz.cheungz.httphelper.core;
 
 import xyz.cheungz.httphelper.constant.HttpConstant;
-import xyz.cheungz.httphelper.entity.Header;
 import xyz.cheungz.httphelper.entity.RequestBody;
 import xyz.cheungz.httphelper.entity.ResponseBody;
 import xyz.cheungz.httphelper.exception.HttpException;
@@ -17,10 +16,6 @@ import xyz.cheungz.httphelper.exception.HttpException;
 public class PoolHttpClient extends AbstractHttpClient {
 
     public PoolHttpClient() {
-    }
-
-    public PoolHttpClient(Header header){
-        this.headers = header;
     }
 
     @Override

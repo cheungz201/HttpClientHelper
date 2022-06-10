@@ -25,7 +25,6 @@ import xyz.cheungz.httphelper.utils.BaseUtils;
 import xyz.cheungz.httphelper.utils.ClientFactory;
 import xyz.cheungz.httphelper.utils.LogUtil;
 import xyz.cheungz.httphelper.utils.SerializationUtil;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -43,8 +42,6 @@ import java.util.Map;
  * @Version: 1.0.0
  **/
 public abstract class AbstractHttpClient implements HttpAble {
-
-    protected Header headers;
 
     Logger logger = LogUtil.getLogger(this.getClass());
 

@@ -2,7 +2,6 @@ package xyz.cheungz.httphelper.core.multithreading;
 
 import xyz.cheungz.httphelper.constant.HttpConstant;
 import xyz.cheungz.httphelper.core.AbstractHttpClient;
-import xyz.cheungz.httphelper.entity.Header;
 import xyz.cheungz.httphelper.entity.RequestBody;
 import xyz.cheungz.httphelper.entity.ResponseBody;
 import xyz.cheungz.httphelper.exception.HttpException;
@@ -19,22 +18,6 @@ public class MultiHttpClient extends AbstractHttpClient {
 
     public MultiHttpClient() {
     }
-
-    public MultiHttpClient(Header header) {
-        this.headers = header;
-    }
-
-
-
-    public Header getHeader() {
-        return headers;
-    }
-
-    public MultiHttpClient setHeader(Header header) {
-        this.headers = header;
-        return this;
-    }
-
 
     @Override
     public ResponseBody sendPost(RequestBody requestBody) throws HttpException {

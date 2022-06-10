@@ -2,7 +2,6 @@ package xyz.cheungz.httphelper.entity;
 
 import org.apache.commons.httpclient.Cookie;
 import xyz.cheungz.httphelper.constant.HttpConstant;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,12 +22,10 @@ public class RequestBody implements Serializable {
      */
     private final Header DEFAULT_REQUEST_HEADER = new Header();
 
-    /**
-     * 默认的请求头
-     */
-    private static Map<String, String> HEADER = new HashMap<>();
 
     {
+        // 默认的请求头
+        Map<String, String> HEADER = new HashMap<>();
         HEADER.put(HttpConstant.CONTENT_TYPE, HttpConstant.BODY);
         HEADER.put("User-Agent","Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1");
         HEADER.put("Accept","*/*");
